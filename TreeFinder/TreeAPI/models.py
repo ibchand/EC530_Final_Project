@@ -1,5 +1,6 @@
 # models.py
 from django.db import models
+import uuid
 
 class Tree(models.Model):
     tree_ID = models.UUIDField(max_length = 12)
@@ -8,4 +9,4 @@ class Tree(models.Model):
     Type = models.CharField(max_length=50)
     UserKey = models.UUIDField(max_length = 12)
     def __str__(self):
-        return self.ID
+        return self.Type
