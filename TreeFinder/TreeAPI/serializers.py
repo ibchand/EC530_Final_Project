@@ -1,9 +1,9 @@
 # serializers.py
 from rest_framework import serializers
 
-from .models import Hero
+from .models import Tree
 
-class HeroSerializer(serializers.HyperlinkedModelSerializer):
+class TreeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Hero
-        fields = ('name', 'alias')
+        model = Tree
+        fields = ('tree_ID', 'lat', 'long', 'Type', 'UserKey')
