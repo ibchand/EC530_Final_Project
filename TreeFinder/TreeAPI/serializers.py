@@ -21,4 +21,4 @@ class TreeSerializer(serializers.HyperlinkedModelSerializer):
 class JourneySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Journey
-        fields = ('user', 'transportType', 'date', 'success', 'tree', 'duration', 'distance')
+        fields = ('title', 'user', 'transportType', 'date', 'success', 'tree', 'duration', 'distance')

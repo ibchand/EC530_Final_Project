@@ -19,7 +19,7 @@ class User(models.Model):
     date_birth = models.DateField(auto_now=False, auto_now_add=False)
 
     def __str__(self):
-        return str(self.user_id)
+        return str(self.username)
 
 class Tree(models.Model):
     tree_ID = models.UUIDField('tree_ID', primary_key=True, default=uuid.uuid4, editable=False)
@@ -28,9 +28,10 @@ class Tree(models.Model):
     Type = models.CharField(max_length=50)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     def __str__(self):
-        return self.Type
+        return "[" + str(self.lat) + "," + str(self.long) + "]"
 
 class Journey(models.Model):
+    title = models.CharField(max_length=50, default="Journey Title")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     transportType = models.CharField(max_length=20)
     date = models.DateField()
@@ -39,4 +40,4 @@ class Journey(models.Model):
     duration = models.DurationField()
     distance = models.DecimalField(max_digits=5, decimal_places=2)
     def __str__(self):
-        return self.date.strftime("%d-%b-%Y")
+        return self.title + " - " + self.date.strftime("%d-%b-%Y")
