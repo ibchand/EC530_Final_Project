@@ -6,8 +6,8 @@ from datetime import datetime
 
 class Tree(models.Model):
     tree_ID = models.UUIDField('tree_ID', primary_key=True, default=uuid.uuid4, editable=False)
-    lat = models.DecimalField(max_digits=9, decimal_places=6)
-    long = models.DecimalField(max_digits=9, decimal_places=6)
+    lat = models.DecimalField(max_digits=9, decimal_places=6, null=True)
+    long = models.DecimalField(max_digits=9, decimal_places=6, null=True)
     Type = models.CharField(max_length=50)
     UserKey = models.UUIDField('UserKey', primary_key=False, default=uuid.uuid4, editable=False)
     def __str__(self):
@@ -18,7 +18,7 @@ class Journey(models.Model):
     transportType = models.CharField(max_length=20)
     date = models.DateField()
     success = models.BooleanField()
-    tree = Tree
+    tree = models.OneToOneField(Tree, null=True, on_delete=models.CASCADE)
     duration = models.DurationField()
     distance = models.DecimalField(max_digits=5, decimal_places=2)
     def __str__(self):
