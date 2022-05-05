@@ -70,6 +70,3 @@ class Journey(models.Model):
     def __str__(self):
         return self.title + " | " + self.date.strftime("%d-%b-%Y")
 
-class MapTest(models.Model):
-    address = map_fields.AddressField(max_length=200)
-    geolocation = map_fields.GeoLocationField(max_length=100)

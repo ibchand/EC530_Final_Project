@@ -1,25 +1,24 @@
 <html>
   <head>
     <title>Add Map</title>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css' rel='stylesheet' />
 
     <link rel="stylesheet" type="text/css" href="./style.css" />
     <script type="module" src="./index.js"></script>
   </head>
   <body>
-    <h3>My Google Maps Demo</h3>
-    <!--The div element for the map -->
-    <div id="map"></div>
+    <h3>My MapBox Demo</h3>   
+    <div id='map' width='50%' style='height:600px'></div>
+    <script>
+      mapboxgl.accessToken = 'pk.eyJ1IjoiYmJyZXdlcjEiLCJhIjoiY2wydDY0aTBmMDAwNjN1cWIxdXZzbXF5ZiJ9.QfdXMqbdcGgP0ZJEbtReiQ';
+      var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [-71.0589, 42.3601],
+        zoom: 11
+      });
+    </script>
 
-    <!-- 
-     The `defer` attribute causes the callback to execute after the full HTML
-     document has been parsed. For non-blocking uses, avoiding race conditions,
-     and consistent behavior across browsers, consider loading using Promises
-     with https://www.npmjs.com/package/@googlemaps/js-api-loader.
-    -->
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly"
-      defer
-    ></script>
   </body>
 </html>
