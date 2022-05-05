@@ -3,6 +3,7 @@ from xmlrpc.client import boolean
 from django.db import models
 import uuid
 from datetime import datetime
+from django_google_maps import fields as map_fields
 
 class User(models.Model):
     # https://docs.djangoproject.com/en/4.0/ref/models/fields/#uuidfield
@@ -28,7 +29,7 @@ class Tree(models.Model):
     Type = models.CharField(max_length=50)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     def __str__(self):
-        return "[" + str(self.lat) + "," + str(self.long) + "]"
+        return self.Type + " [" + str(self.lat) + "," + str(self.long) + "]"
 
 class Journey(models.Model):
     title = models.CharField(max_length=50, default="Journey Title")
@@ -40,4 +41,8 @@ class Journey(models.Model):
     duration = models.DurationField()
     distance = models.DecimalField(max_digits=5, decimal_places=2)
     def __str__(self):
-        return self.title + " - " + self.date.strftime("%d-%b-%Y")
+        return self.title + " | " + self.date.strftime("%d-%b-%Y")
+
+class MapTest(models.Model):
+    address = map_fields.AddressField(max_length=200)
+    geolocation = map_fields.GeoLocationField(max_length=100)
