@@ -1,17 +1,26 @@
 # serializers.py
 from rest_framework import serializers
 
-from .models import User, Tree, Journey
+from .models import UserProfile, Tree, Journey
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = User
+        model = UserProfile
         fields = (
-            'user_id',
-            'username',
+            'user',
             'address',
-            'date_birth',
+            'data_birth',
         )
+
+# class UserSerializer(serializers.HyperlinkedModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = (
+#             'user_id',
+#             'username',
+#             'address',
+#             'date_birth',
+#         )
 
 class TreeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

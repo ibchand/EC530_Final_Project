@@ -5,22 +5,49 @@ import uuid
 from datetime import datetime
 from django_google_maps import fields as map_fields
 
-class User(models.Model):
-    # https://docs.djangoproject.com/en/4.0/ref/models/fields/#uuidfield
-    user_id = models.UUIDField(
-        'user_id',
-        primary_key = True,
-        default = uuid.uuid4,
-        editable = False
-    )
-    # https://docs.djangoproject.com/en/4.0/ref/models/fields/#charfield
-    username = models.CharField(max_length=30)
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+# from django.contrib.auth.models import AbstractUser
+
+
+class UserProfile(models.Model):
+    # REQUIRED_FIELDS = ('user','address','date_birth')
+    user = models.OneToOneField(User, related_name='profile', unique=True, on_delete=models.CASCADE)
     address = models.CharField(max_length=60)
-    # https://docs.djangoproject.com/en/4.0/ref/models/fields/#datefield
     date_birth = models.DateField(auto_now=False, auto_now_add=False)
 
+    # USERNAME_FIELD = 'username'
+
     def __str__(self):
-        return str(self.username)
+        return str(self.user.username)
+
+# @receiver(post_save, sender=User)
+# def create_user_profile(sender, instance, created, **kwargs):
+#     if created:
+#         UserProfile.objects.create(user=instance)
+
+# @receiver(post_save, sender=User)
+# def save_user_profile(sender, instance, **kwargs):
+#     instance.profile.save()
+
+# class User(models.Model):
+    # https://docs.djangoproject.com/en/4.0/ref/models/fields/#uuidfield
+    # pass
+    # user_id = models.UUIDField(
+    #     'user_id',
+    #     primary_key = True,
+    #     default = uuid.uuid4,
+    #     editable = False
+    # )
+    # # https://docs.djangoproject.com/en/4.0/ref/models/fields/#charfield
+    # username = models.CharField(max_length=30)
+    # address = models.CharField(max_length=60)
+    # # https://docs.djangoproject.com/en/4.0/ref/models/fields/#datefield
+    # date_birth = models.DateField(auto_now=False, auto_now_add=False)
+
+    # def __str__(self):
+    #     return str(self.username)
 
 class Tree(models.Model):
     tree_ID = models.UUIDField('tree_ID', primary_key=True, default=uuid.uuid4, editable=False)

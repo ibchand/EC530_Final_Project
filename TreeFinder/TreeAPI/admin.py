@@ -3,7 +3,7 @@ from .models import User, Tree, Journey
 from django_google_maps import widgets as map_widgets
 from django_google_maps import fields as map_fields
 
-admin.site.register(User)
+admin.site.register(UserProfile)
 admin.site.register(Tree)
 admin.site.register(Journey)
 
