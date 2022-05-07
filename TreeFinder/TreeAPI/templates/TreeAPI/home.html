@@ -10,6 +10,8 @@
   <body>
     <h3>My MapBox Demo</h3>   
     <div id='map' width='50%' style='height:600px'></div>
+
+    {%block scripts%}
     <script>
       mapboxgl.accessToken = 'pk.eyJ1IjoiYmJyZXdlcjEiLCJhIjoiY2wydDY0aTBmMDAwNjN1cWIxdXZzbXF5ZiJ9.QfdXMqbdcGgP0ZJEbtReiQ';
       var map = new mapboxgl.Map({
@@ -18,7 +20,17 @@
         center: [-71.0589, 42.3601],
         zoom: 11
       });
+
+      {% for tree in trees %}
+        new mapboxgl.Marker({ color: '#2D6B14' }).setLngLat([{{tree.long}}, {{tree.lat}}]).addTo(map);
+      {% endfor %}
+      // const marker = new mapboxgl.Marker({ color: '#2D6B14' }).setLngLat([-71.0589, 42.3601]).addTo(map);
+
+      // const marker = new mapboxgl.Marker()
+      //   .setLngLat([-71.0589, 42.3601])
+      //   .addTo(map);
     </script>
+    {%endblock scripts%}
 
   </body>
 </html>

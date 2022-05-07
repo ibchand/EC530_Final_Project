@@ -11,16 +11,16 @@ from django.dispatch import receiver
 # from django.contrib.auth.models import AbstractUser
 
 
-class UserProfile(models.Model):
-    # REQUIRED_FIELDS = ('user','address','date_birth')
-    user = models.OneToOneField(User, related_name='profile', unique=True, on_delete=models.CASCADE)
-    address = models.CharField(max_length=60)
-    date_birth = models.DateField(auto_now=False, auto_now_add=False)
+# class UserProfile(models.Model):
+#     # REQUIRED_FIELDS = ('user','address','date_birth')
+#     user = models.OneToOneField(User, related_name='profile', unique=True, on_delete=models.CASCADE)
+#     address = models.CharField(max_length=60)
+#     date_birth = models.DateField(auto_now=False, auto_now_add=False)
 
-    # USERNAME_FIELD = 'username'
+#     # USERNAME_FIELD = 'username'
 
-    def __str__(self):
-        return str(self.user.username)
+#     def __str__(self):
+#         return str(self.user.username)
 
 # @receiver(post_save, sender=User)
 # def create_user_profile(sender, instance, created, **kwargs):
@@ -50,13 +50,14 @@ class UserProfile(models.Model):
     #     return str(self.username)
 
 class Tree(models.Model):
-    tree_ID = models.UUIDField('tree_ID', primary_key=True, default=uuid.uuid4, editable=False)
+    # tree_ID = models.UUIDField('tree_ID', primary_key=True, default=uuid.uuid4, editable=False)
+    tree_ID = models.IntegerField(primary_key=True, default=0)
     lat = models.DecimalField(max_digits=9, decimal_places=6, null=True)
     long = models.DecimalField(max_digits=9, decimal_places=6, null=True)
     Type = models.CharField(max_length=50)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     def __str__(self):
-        return self.Type + " [" + str(self.lat) + "," + str(self.long) + "]"
+        return str(self.tree_ID) + " [" + str(self.lat) + "," + str(self.long) + "]"
 
 class Journey(models.Model):
     title = models.CharField(max_length=50, default="Journey Title")
