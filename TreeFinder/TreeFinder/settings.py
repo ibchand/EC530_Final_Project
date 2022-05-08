@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles', 
     'django_google_maps',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -132,7 +133,7 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # users will be redirected to the home page after login
-LOGIN_REDIRECT_URL = 'auth'
+LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'login'
 
 # AUTH_USER_MODEL = 'TreeAPI.UserProfile'

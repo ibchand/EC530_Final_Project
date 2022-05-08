@@ -10,18 +10,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 # from django.contrib.auth.models import AbstractUser
 
-
-# class UserProfile(models.Model):
-#     # REQUIRED_FIELDS = ('user','address','date_birth')
-#     user = models.OneToOneField(User, related_name='profile', unique=True, on_delete=models.CASCADE)
-#     address = models.CharField(max_length=60)
-#     date_birth = models.DateField(auto_now=False, auto_now_add=False)
-
-#     # USERNAME_FIELD = 'username'
-
-#     def __str__(self):
-#         return str(self.user.username)
-
 # @receiver(post_save, sender=User)
 # def create_user_profile(sender, instance, created, **kwargs):
 #     if created:
@@ -52,12 +40,29 @@ from django.dispatch import receiver
 class Tree(models.Model):
     # tree_ID = models.UUIDField('tree_ID', primary_key=True, default=uuid.uuid4, editable=False)
     tree_ID = models.IntegerField(primary_key=True, default=0)
-    lat = models.DecimalField(max_digits=9, decimal_places=6, null=True)
-    long = models.DecimalField(max_digits=9, decimal_places=6, null=True)
-    Type = models.CharField(max_length=50)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    lat = models.DecimalField(max_digits=17, decimal_places=14, null=True)
+    long = models.DecimalField(max_digits=17, decimal_places=14, null=True)
+    Type = models.CharField(max_length=50, default="UNKNOWN")
+    # user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     def __str__(self):
         return str(self.tree_ID) + " [" + str(self.lat) + "," + str(self.long) + "]"
+
+class UserProfile(models.Model):
+    # REQUIRED_FIELDS = ('user','address','date_birth')
+    user = models.OneToOneField(User, related_name='profile', unique=True, on_delete=models.CASCADE)
+    favorite_trees = models.ManyToManyField(Tree)
+
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            UserProfile.objects.create(user=instance)
+
+    @receiver(post_save, sender=User)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.profile.save()
+
+    def __str__(self):
+        return str(self.user.username)
 
 class Journey(models.Model):
     title = models.CharField(max_length=50, default="Journey Title")

@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <title>Add Map</title>
+    <!-- <script src='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js'></script> -->
+    <!-- <link href='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css' rel='stylesheet' /> -->
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+    <script type="module" src="./index.js"></script>
+  </head>
+  <body>
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.js"></script>
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.css" type="text/css">
+
+    <h1>{{tree_id}}</h1>
+    <div>
+      <div id='map' width='50%' style='height:600px'></div>
+
+      {%block scripts%}
+      <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiYmJyZXdlcjEiLCJhIjoiY2wydDY0aTBmMDAwNjN1cWIxdXZzbXF5ZiJ9.QfdXMqbdcGgP0ZJEbtReiQ';
+        var map = new mapboxgl.Map({
+          container: 'map',
+          style: 'mapbox://styles/mapbox/streets-v11',
+          center: [-71.0589, 42.3601],
+          zoom: 11
+        });
+
+        new mapboxgl.Marker({ color: '#2D6B14' }).setLngLat([{{tree.long}}, {{tree.lat}}]).addTo(map);
+
+        var directions = new MapboxDirections({
+          accessToken: mapboxgl.accessToken,
+        })
+
+        map.addControl(directions,'top-left');
+
+        map.on('load', function() {
+          directions.setDestination([{{tree.long}},{{tree.lat}}])
+        })
+
+        // console.log(directions.getOrigin());
+
+      </script>
+      {%endblock scripts%}}
+    </div>
+
+    
+
+  </body>
+</html>
