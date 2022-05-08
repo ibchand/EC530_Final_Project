@@ -8,29 +8,61 @@
     <script type="module" src="./index.js"></script>
   </head>
   <body>
-    <h3>My MapBox Demo</h3>   
-    <div id='map' width='50%' style='height:600px'></div>
+    <h1>Hello, {{ user.username|default:'Guest' }}</h1>
 
-    {%block scripts%}
-    <script>
-      mapboxgl.accessToken = 'pk.eyJ1IjoiYmJyZXdlcjEiLCJhIjoiY2wydDY0aTBmMDAwNjN1cWIxdXZzbXF5ZiJ9.QfdXMqbdcGgP0ZJEbtReiQ';
-      var map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/mapbox/streets-v11',
-        center: [-71.0589, 42.3601],
-        zoom: 11
-      });
+    <div>
+      {% if user.is_authenticated %}
+        {<a href="{% url 'logout' %}">Logout</a>
 
-      {% for tree in trees %}
-        new mapboxgl.Marker({ color: '#2D6B14' }).setLngLat([{{tree.long}}, {{tree.lat}}]).addTo(map);
-      {% endfor %}
-      // const marker = new mapboxgl.Marker({ color: '#2D6B14' }).setLngLat([-71.0589, 42.3601]).addTo(map);
+        <div>
+          <p>Past Journeys:</p>
+          <ul>
+          </ul>
+          
+        </div>
+    
+        <div>
+          <p>Favorite Trees:</p>
+          <ul>
+            {% for tree in user_trees%}
+              <!-- <li>{{tree.tree_ID}} <a href="{% url 'journey' %}">Journey</a></li> -->
+              <li>
+                {{tree.tree_ID}}
+                <form action="/journey/" method="post" id="journeyForm">
+                  {% csrf_token %}
+                  <button type="submit" name="journeyButton" value={{tree.tree_ID}} form="journeyForm">Journey</button>
+                </form>
+              </li>
+            {% endfor %}
+          </ul>
+          
+        </div>
+    
+        <div id='map' width='50%' style='height:600px'></div>
+    
+        {%block scripts%}
+        <script>
+          mapboxgl.accessToken = 'pk.eyJ1IjoiYmJyZXdlcjEiLCJhIjoiY2wydDY0aTBmMDAwNjN1cWIxdXZzbXF5ZiJ9.QfdXMqbdcGgP0ZJEbtReiQ';
+          var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [-71.0589, 42.3601],
+            zoom: 11
+          });
+    
+          {% for tree in fav_trees %}
+            new mapboxgl.Marker({ color: '#2D6B14' }).setLngLat([{{tree.long}}, {{tree.lat}}]).addTo(map);
+          {% endfor %}
+    
+        </script>
+        {%endblock scripts%}}
+      {% else %}
+          <a href="{% url 'signup' %}">Sign Up</a>
+          <a href="{% url 'login' %}">Login</a>
+      {% endif %}
+    </div>
 
-      // const marker = new mapboxgl.Marker()
-      //   .setLngLat([-71.0589, 42.3601])
-      //   .addTo(map);
-    </script>
-    {%endblock scripts%}
+    
 
   </body>
 </html>

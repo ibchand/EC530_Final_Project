@@ -7,8 +7,8 @@ from django.views.generic.edit import CreateView
 from django.shortcuts import render
 
 from .serializers import TreeSerializer, JourneySerializer
-# from .serializers import UserProfileSerializer
-from .models import User, Tree, Journey
+from .serializers import UserProfileSerializer
+from .models import User, Tree, Journey, UserProfile
 
 from django.template import loader
 
@@ -18,9 +18,9 @@ import json
 from django.utils import timezone
 import os
 
-# class UserProfileViewSet(viewsets.ModelViewSet):
-#     queryset = User.objects.all().order_by('username')
-#     serializer_class = UserProfileSerializer
+class UserProfileViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all().order_by('username')
+    serializer_class = UserProfileSerializer
 
 class TreeViewSet(viewsets.ModelViewSet):
     queryset = Tree.objects.all().order_by('tree_ID')
@@ -38,6 +38,15 @@ class SignUp(CreateView):
 def home(request):
     template = loader.get_template('TreeAPI/home.html')
 
+    context = {}
+
+    try:
+        user_profile = UserProfile.objects.filter(user=request.user)
+
+        context['user_trees'] = user_profile[0].favorite_trees.all()
+    except:
+        context['user_trees'] = []
+
     trees = Tree.objects.all()
 
     new_array = []
@@ -46,10 +55,8 @@ def home(request):
         if count % 128 == 0:
             new_array.append(tree)
 
+    context['trees'] = new_array
 
-    context = {
-        'trees': new_array
-    }
     return HttpResponse(template.render(context, request))
     # return HttpResponse("Hello, world.")
 
@@ -104,4 +111,20 @@ def chart_map(request):
     context = {
         'trees': new_array
     }
+    return HttpResponse(template.render(context, request))
+
+def journey(request):
+    template = loader.get_template('TreeAPI/journey.html')
+
+    requested_tree_id = request.POST.get('journeyButton', None)
+
+    requested_tree = Tree.objects.filter(tree_ID=requested_tree_id)
+
+    print(requested_tree[0].lat)
+
+    context = {
+        'tree': requested_tree[0],
+        'tree_id': requested_tree_id
+    }
+
     return HttpResponse(template.render(context, request))

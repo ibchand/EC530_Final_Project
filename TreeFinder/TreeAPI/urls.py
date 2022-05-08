@@ -4,7 +4,7 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-# router.register(r'userprofiles', views.UserProfileViewSet)
+router.register(r'userprofiles', views.UserProfileViewSet)
 router.register(r'trees', views.TreeViewSet)
 router.register(r'journeys', views.JourneyViewSet)
 
@@ -16,6 +16,7 @@ urlpatterns = [
     path('home/', views.home, name='home'),
     path('tree-map/', views.chart_map, name='tree-map'),
     path('generate-trees/', views.generate_trees, name='generate-trees'),
+    path('journey/', views.journey, name='journey'),
     path('auth/', views.auth, name='auth'),
     path('auth/signup/', views.SignUp.as_view(), name='signup')
 ]
