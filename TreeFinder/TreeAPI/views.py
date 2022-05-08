@@ -8,9 +8,10 @@ from django.shortcuts import render
 
 from .serializers import TreeSerializer, JourneySerializer
 from .serializers import UserProfileSerializer
-from .models import User, Tree, Journey, UserProfile
+from .models import User, Tree, Journey, UserProfile, JourneyForm
 
 from django.template import loader
+import datetime
 
 # Data Prcocessing
 import csv
@@ -36,16 +37,39 @@ class SignUp(CreateView):
     template_name = 'registration/signup.html'
 
 def home(request):
+
+    if (request.method == 'POST'):
+        form = JourneyForm(request.POST)
+        if (form.is_valid()):
+            print(form['title'])
+            form.save()
+
+    # JourneyForm Handling
+    # journey_data = request.POST.get('journeyFormButton', None)
+    # print("JOURNEY DATA: " + journey_data)
+    # if (journey_data != None):
+    #     journey_form = JourneyForm(**form_args)
+    #     print(journey_form)
+    #     if JourneyForm.is_valid():
+    #         yazilar = journey_form.save(commit=True)
+    
+    # print("------------: " + journey_data)
+    # f = JourneyForm(request.POST, initial=data)
+    # print(f)
+
     template = loader.get_template('TreeAPI/home.html')
 
     context = {}
 
     try:
         user_profile = UserProfile.objects.filter(user=request.user)
+        user_journeys = Journey.objects.filter(user=request.user)
 
         context['user_trees'] = user_profile[0].favorite_trees.all()
+        context['user_journeys'] = user_journeys
     except:
         context['user_trees'] = []
+        context['user_journeys'] = []
 
     trees = Tree.objects.all()
 
@@ -114,17 +138,36 @@ def chart_map(request):
     return HttpResponse(template.render(context, request))
 
 def journey(request):
+    context = {}
+
     template = loader.get_template('TreeAPI/journey.html')
 
     requested_tree_id = request.POST.get('journeyButton', None)
 
-    requested_tree = Tree.objects.filter(tree_ID=requested_tree_id)
+    print(requested_tree_id)
 
-    print(requested_tree[0].lat)
+    requested_tree = Tree.objects.filter(tree_ID=requested_tree_id)[0]
 
-    context = {
-        'tree': requested_tree[0],
-        'tree_id': requested_tree_id
-    }
+    if (requested_tree_id != None):
+        requested_tree = Tree.objects.filter(tree_ID=requested_tree_id)[0]
+        context['tree'] = requested_tree
+        context['tree_id'] = requested_tree_id
+
+    form = JourneyForm(initial={'user': request.user, 'tree': requested_tree})
+
+    context['journeyForm'] = form
+
+    return HttpResponse(template.render(context, request))
+
+def past_journey(request):
+    context = {}
+
+    template = loader.get_template('TreeAPI/past_journey.html')
+
+    requested_journey_id = request.POST.get('past_journeyButton', None)
+
+    if (requested_journey_id != None):
+        requested_journey = Journey.objects.filter(journey_ID=requested_journey_id)[0]
+        context['journey'] = requested_journey
 
     return HttpResponse(template.render(context, request))

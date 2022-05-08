@@ -17,6 +17,16 @@
         <div>
           <p>Past Journeys:</p>
           <ul>
+            {% for journey in user_journeys %}
+              <li>
+                {{journey.title}}
+                {{journey.journey_ID}}
+                <form action="/past-journey/" method="post" id="past_journeyForm">
+                  {% csrf_token %}
+                  <button type="submit" name="past_journeyButton" value={{journey.journey_ID}} form="past_journeyForm">View Journey</button>
+                </form>
+              </li>
+            {% endfor %}
           </ul>
           
         </div>
@@ -30,7 +40,7 @@
                 {{tree.tree_ID}}
                 <form action="/journey/" method="post" id="journeyForm">
                   {% csrf_token %}
-                  <button type="submit" name="journeyButton" value={{tree.tree_ID}} form="journeyForm">Journey</button>
+                  <button type="submit" name="journeyButton" value={{tree.tree_ID}} form="journeyForm">Create Journey</button>
                 </form>
               </li>
             {% endfor %}

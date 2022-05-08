@@ -17,6 +17,7 @@ urlpatterns = [
     path('tree-map/', views.chart_map, name='tree-map'),
     path('generate-trees/', views.generate_trees, name='generate-trees'),
     path('journey/', views.journey, name='journey'),
+    path('past-journey/', views.past_journey, name='past-journey'),
     path('auth/', views.auth, name='auth'),
     path('auth/signup/', views.SignUp.as_view(), name='signup')
 ]

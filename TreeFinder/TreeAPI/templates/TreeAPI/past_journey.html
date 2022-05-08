@@ -14,10 +14,9 @@
     <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.js"></script>
     <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.css" type="text/css">
 
-    <!-- {% with random_var=5 %} -->
     
 
-    <h1>{{tree_id}}</h1>
+    <h1>{{journey.title}}</h1>
     <div>
       <div id='map' width='50%' style='height:600px'></div>
 
@@ -31,52 +30,22 @@
           zoom: 11
         });
 
-        new mapboxgl.Marker({ color: '#2D6B14' }).setLngLat([{{tree.long}}, {{tree.lat}}]).addTo(map);
+        // new mapboxgl.Marker({ color: '#2D6B14' }).setLngLat([{{tree.long}}, {{tree.lat}}]).addTo(map);
 
         var directions = new MapboxDirections({
           accessToken: mapboxgl.accessToken,
+          profile: 'mapbox/{{journey.transportType}}'
         })
-
+        console.log('mapbox/{{journey.transportType}}')
         map.addControl(directions,'top-left');
 
         map.on('load', function() {
-          directions.setDestination([{{tree.long}},{{tree.lat}}])
-        })
-
-        map.on('data', function() {
-          var origin_lat = directions.getOrigin().geometry.coordinates[1]
-          var origin_long = directions.getOrigin().geometry.coordinates[0]
-          // console.log(directions.getOrigin());
-          // console.log(directions.parameter());
-
-
-          directions.on('route', (event) => {
-            for (const route of event.route) {
-              console.log(route.legs[0].steps[0].mode);
-              document.getElementById("id_duration").value = Math.round((route.duration / 60) * 100) / 100;
-              document.getElementById("id_distance").value = Math.round((route.distance * 0.000621371)) / 100;
-              document.getElementById("id_transportType").value = route.legs[0].steps[0].mode
-            }
-          })
-          document.getElementById("id_origin_lat").value = origin_lat;
-          document.getElementById("id_origin_long").value = origin_long;
-          document.getElementById("id_origin_long").value = origin_long;
+          directions.setDestination([{{journey.tree.long}},{{journey.tree.lat}}]);
+          directions.setOrigin([{{journey.origin_long}},{{journey.origin_lat}}])
         })
 
       </script>
       {%endblock scripts%}
-
     </div>
-
-    <form method="post" action="/home/" id="journeyForm">
-      {% csrf_token %}
-      <table>
-        {{journeyForm}}
-      </table>
-      <button type="submit" name="journeyFormButton" form="journeyForm" value="Submit Form">Create Journey</button>
-    </form>
-
-    <!-- {% endwith %} -->
-
   </body>
 </html>

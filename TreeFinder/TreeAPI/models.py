@@ -5,6 +5,8 @@ import uuid
 from datetime import datetime
 from django_google_maps import fields as map_fields
 
+from django import forms
+from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -65,14 +67,35 @@ class UserProfile(models.Model):
         return str(self.user.username)
 
 class Journey(models.Model):
-    title = models.CharField(max_length=50, default="Journey Title")
+    journey_ID = models.UUIDField('tree_ID', primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=50)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     transportType = models.CharField(max_length=20)
-    date = models.DateField()
-    success = models.BooleanField()
+    date = models.DateField(auto_now_add=True)
+    # success = models.BooleanField()
+    origin_lat = models.DecimalField(max_digits=17, decimal_places=14, null=True)
+    origin_long = models.DecimalField(max_digits=17, decimal_places=14, null=True)
     tree = models.ForeignKey(Tree, on_delete=models.CASCADE, null=True)
     duration = models.DurationField()
     distance = models.DecimalField(max_digits=5, decimal_places=2)
     def __str__(self):
         return self.title + " | " + self.date.strftime("%d-%b-%Y")
+
+class JourneyForm(ModelForm):
+    class Meta:
+        model = Journey
+        fields = [
+            'title',
+            'user',
+            'transportType',
+            'origin_lat',
+            'origin_long',
+            'tree',
+            'duration',
+            'distance'
+        ]
+        widgets = {
+            'user': forms.HiddenInput(),
+            'tree': forms.HiddenInput(),
+        }
 
