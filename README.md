@@ -20,7 +20,6 @@ The Django REST Framework provides an out of the box authentication solution wih
 ### Setup
 1. Clone this repository
 2. Install the necessary dependencies
-3. 
 
 ### How to
 1. run `python3 manage.py runserver` in the TreeFinder directory
