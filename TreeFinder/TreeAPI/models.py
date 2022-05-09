@@ -3,7 +3,7 @@ from xmlrpc.client import boolean
 from django.db import models
 import uuid
 from datetime import datetime
-from django_google_maps import fields as map_fields
+# from django_google_maps import fields as map_fields
 
 from django import forms
 from django.forms import ModelForm
