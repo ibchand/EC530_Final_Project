@@ -7,7 +7,7 @@ The Boston Tree Finder is a Django website application that allows users to find
 The MapBox API was used by our team to display maps on the home and journey screens in the application. We also added the directions functionality so that users could select their origin point and get directions to the selected tree via the desired method of transportation, along with receiving the duration and distance information. 
 
 ### Django REST Framework
-The Django REST Framework provides an out of the box authentication solution wiht built-in APIs developers can leverage. 
+The Django REST Framework provides an out of the box authentication solution with built-in APIs developers can leverage. 
 
 ## User Stories
 - As a tree enthusiast, I want to find random trees in Boston
