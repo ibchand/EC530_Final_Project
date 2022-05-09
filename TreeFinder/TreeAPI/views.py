@@ -18,6 +18,7 @@ import csv
 import json
 from django.utils import timezone
 import os
+import random
 
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('username')
@@ -37,12 +38,21 @@ class SignUp(CreateView):
     template_name = 'registration/signup.html'
 
 def home(request):
+    favorited_tree_id = request.POST.get('favoriteButton', None)
 
-    if (request.method == 'POST'):
-        form = JourneyForm(request.POST)
-        if (form.is_valid()):
-            print(form['title'])
-            form.save()
+    if (favorited_tree_id == None):
+        if (request.method == 'POST'):
+            form = JourneyForm(request.POST)
+            if (form.is_valid()):
+                print(form['title'])
+                form.save()
+    else:
+        # print('HANDLING FAVORITE TREE')
+        requested_tree = Tree.objects.filter(tree_ID=favorited_tree_id)[0]
+        user_profile = UserProfile.objects.filter(user=request.user)
+        user_profile[0].favorite_trees.add(requested_tree)
+        # user_profile.save()
+    
 
     # JourneyForm Handling
     # journey_data = request.POST.get('journeyFormButton', None)
@@ -75,11 +85,15 @@ def home(request):
 
     new_array = []
 
-    for count, tree in enumerate(trees):
-        if count % 128 == 0:
-            new_array.append(tree)
+    # for count, tree in enumerate(trees):
+    #     if count % 128 == 0:
+    #         new_array.append(tree)
 
-    context['trees'] = new_array
+
+    # context['trees'] = new_array
+    # print(random.sample(list(trees),10))
+    context['random_trees'] = random.sample(list(trees), 5)
+    
 
     return HttpResponse(template.render(context, request))
     # return HttpResponse("Hello, world.")
@@ -112,11 +126,11 @@ def generate_trees(request):
         for row in csv_reader:
             if line_count == 0:
                 print(f'Column names are {", ".join(row)}')
-                line_count += 1
-            else:
+            elif line_count % 128 == 0:
                 new_tree = Tree(tree_ID=float(row[2]), lat=float(row[1]), long=float(row[0]), Type="Unknown")
                 new_tree.save()
-    return HttpResponse("Hello, this will take about an hour :)")
+            line_count += 1
+    return HttpResponse("Hello, the current divison factor is 128, resulting in 1577 trees. Change this setting in TreeFinder/TreeAPI/views.py->generate_trees view")
     
 
 def chart_map(request):

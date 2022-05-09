@@ -12,42 +12,70 @@
 
     <div>
       {% if user.is_authenticated %}
-        {<a href="{% url 'logout' %}">Logout</a>
+        <a href="{% url 'logout' %}">Logout</a>
 
-        <div>
-          <p>Past Journeys:</p>
-          <ul>
-            {% for journey in user_journeys %}
-              <li>
-                {{journey.title}}
-                {{journey.journey_ID}}
-                <form action="/past-journey/" method="post" id="past_journeyForm">
-                  {% csrf_token %}
-                  <button type="submit" name="past_journeyButton" value={{journey.journey_ID}} form="past_journeyForm">View Journey</button>
-                </form>
-              </li>
-            {% endfor %}
-          </ul>
-          
+
+        <div style="width: 100%;">
+          <div style="width: 33%; float: left;">
+            <p>Past Journeys:</p>
+            <ul>
+              {% for journey in user_journeys %}
+                <li>
+                  {{journey.title}}
+                  <form action="/past-journey/" method="post" id="past_journeyForm">
+                    {% csrf_token %}
+                    <button type="submit" name="past_journeyButton" value={{journey.journey_ID}} form="past_journeyForm">View Journey</button>
+                  </form>
+                </li>
+              {% endfor %}
+            </ul>  
+          </div>
+
+          <div style="width: 33%; float: left;">
+            <p>Favorite Trees:</p>
+            <ul>
+              {% for tree in user_trees%}
+                <!-- <li>{{tree.tree_ID}} <a href="{% url 'journey' %}">Journey</a></li> -->
+                <li>
+                  {{tree.tree_ID}}
+                  <form action="/journey/" method="post" id="journeyForm">
+                    {% csrf_token %}
+                    <button type="submit" name="journeyButton" value={{tree.tree_ID}} form="journeyForm">Create Journey</button>
+                  </form>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+
+          <div style="width: 33%; float: left;">
+            <p>Random Trees:</p>
+            <ul>
+              {% for tree in random_trees %}
+                <!-- <li>{{tree.tree_ID}} <a href="{% url 'journey' %}">Journey</a></li> -->
+                <li>
+                  {{tree.tree_ID}}
+                  <form action="/journey/" method="post" id="journeyForm">
+                    {% csrf_token %}
+                    <button type="submit" name="journeyButton" value={{tree.tree_ID}} form="journeyForm">Create Journey</button>
+                  </form>
+                  <form action="/home/" method="post" id="favoriteForm">
+                    {% csrf_token %}
+                    <button type="submit" name="favoriteButton" value={{tree.tree_ID}} form="favoriteForm">Favorite</button>
+                  </form>
+                </li>
+                
+              {% endfor %}
+            </ul>
+          </div>
         </div>
     
         <div>
-          <p>Favorite Trees:</p>
+          <p>Legend</p>
           <ul>
-            {% for tree in user_trees%}
-              <!-- <li>{{tree.tree_ID}} <a href="{% url 'journey' %}">Journey</a></li> -->
-              <li>
-                {{tree.tree_ID}}
-                <form action="/journey/" method="post" id="journeyForm">
-                  {% csrf_token %}
-                  <button type="submit" name="journeyButton" value={{tree.tree_ID}} form="journeyForm">Create Journey</button>
-                </form>
-              </li>
-            {% endfor %}
+            <li>Favorite Trees: Green</li>
+            <li>Random Trees: Red</li>
           </ul>
-          
         </div>
-    
         <div id='map' width='50%' style='height:600px'></div>
     
         {%block scripts%}
@@ -60,10 +88,13 @@
             zoom: 11
           });
     
-          {% for tree in fav_trees %}
+          {% for tree in user_trees %}
             new mapboxgl.Marker({ color: '#2D6B14' }).setLngLat([{{tree.long}}, {{tree.lat}}]).addTo(map);
           {% endfor %}
-    
+
+          {% for tree in random_trees %}
+            new mapboxgl.Marker({ color: '#cc1010' }).setLngLat([{{tree.long}}, {{tree.lat}}]).addTo(map)
+          {% endfor %}
         </script>
         {%endblock scripts%}}
       {% else %}
