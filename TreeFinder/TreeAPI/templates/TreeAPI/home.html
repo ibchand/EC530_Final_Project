@@ -96,7 +96,7 @@
             new mapboxgl.Marker({ color: '#cc1010' }).setLngLat([{{tree.long}}, {{tree.lat}}]).addTo(map)
           {% endfor %}
         </script>
-        {%endblock scripts%}}
+        {%endblock scripts%}
       {% else %}
           <a href="{% url 'signup' %}">Sign Up</a>
           <a href="{% url 'login' %}">Login</a>
